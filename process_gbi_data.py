@@ -6,16 +6,16 @@ Author: Benjamin J. Chapman
 Email: bchapman8@gsu.edu
 Organization: Legal Analytics & Innovation Initiative Georgia State University College of Law
 Date: Tuesday, October 26, 2021
-Version: 0.02
+Version: 0.03
 License: CC-by-SA 4.0
 '''
 
 from bs4 import BeautifulSoup
-import requests
 from requests_html import HTMLSession
 import csv
 import re
 import sys
+import argparse
 
 DEBUG = False
 URL = 'https://services.georgia.gov/gbi/crimestats/pages/crimeStatsForm.xhtml'
@@ -120,9 +120,11 @@ def process_year(year):
     print('Wrote %s.' % output_csv)
 
 if __name__ == "__main__":
-    ## The range that we care about
-    ## Enhancement request - this should be a commandline argument
-    ## via argparse
-    ## or input from user
-    for year in range(2015,2018):
+    # Default range is 2014-2017 (inclusive)
+    parser = argparse.ArgumentParser(description='Create nicely-formatted CSV files by year of crime data from the GBI')
+    parser.add_argument('-s', '--start', help='start year to be included in output (min = 1980)', type=int, default = 2014)
+    parser.add_argument('-e', '--end', help='end year to be included in output (max = 2017)', type=int, default = 2017)
+    args = parser.parse_args()
+    if args.start < 1980: args.start = 1980
+    for year in range(args.start,args.end+1):
         process_year(year)
