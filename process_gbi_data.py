@@ -59,7 +59,7 @@ def get_month_sections(lines):
         for index, line in enumerate(lines):
             if line.startswith(month):
                 month_index[month] = index
-            if DEBUG: print(month_index)
+    if DEBUG: print(month_index)
     return month_index
 
 def get_data_end(lines):
@@ -99,7 +99,7 @@ def get_month_data(month_data):
         data_rows.append(new_row)
     return data_rows
 
-def write_file(output_csv, title, header, data_rows):
+def write_file(output_csv, header, data_rows):
     with open(output_csv,'w') as f:
         writer = csv.writer(f)
         writer.writerow(header)
@@ -116,7 +116,7 @@ def process_year(year):
     for m in months:
         data_rows += get_month_data(m)
     output_csv = title + '-gbi_data.csv'
-    write_file(output_csv, title, HEADER, data_rows)
+    write_file(output_csv, HEADER, data_rows)
     print('Wrote %s.' % output_csv)
 
 if __name__ == "__main__":
@@ -126,5 +126,6 @@ if __name__ == "__main__":
     parser.add_argument('-e', '--end', help='end year to be included in output (max = 2017)', type=int, default = 2017)
     args = parser.parse_args()
     if args.start < 1980: args.start = 1980
-    for year in range(args.start,args.end+1):
+    for year in range(args.start, args.end+1):
         process_year(year)
+
